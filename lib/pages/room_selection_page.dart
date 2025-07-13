@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../core/signaling/firestore_signaling_service.dart';
 import 'signaling_test_page.dart';
+import 'p2p_chat_page.dart';
 
 class RoomSelectionPage extends StatefulWidget {
   const RoomSelectionPage({super.key});
@@ -102,18 +103,11 @@ class _RoomSelectionPageState extends State<RoomSelectionPage> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Successfully joined room: $roomId'),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        // Navigate to test page
+        // Navigate to P2P chat as callee
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SignalingTestPage(
+            builder: (context) => P2PChatPage(
               roomId: roomId,
               isCaller: false,
             ),
@@ -312,24 +306,52 @@ class _RoomSelectionPageState extends State<RoomSelectionPage> {
                               ],
                             ),
                             const SizedBox(height: 8),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SignalingTestPage(
-                                      roomId: _createdRoomId!,
-                                      isCaller: true,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => P2PChatPage(
+                                            roomId: _createdRoomId!,
+                                            isCaller: true,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(Icons.chat),
+                                    label: const Text('Start P2P Chat'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      foregroundColor: Colors.white,
                                     ),
                                   ),
-                                );
-                              },
-                              icon: const Icon(Icons.bug_report),
-                              label: const Text('Test Signaling'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange,
-                                foregroundColor: Colors.white,
-                              ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SignalingTestPage(
+                                            roomId: _createdRoomId!,
+                                            isCaller: true,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(Icons.bug_report),
+                                    label: const Text('Test Signaling'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.orange,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

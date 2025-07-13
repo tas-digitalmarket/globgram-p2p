@@ -9,17 +9,21 @@ A decentralized social media application built with Flutter.
 - **Multi-language Support**: English and Persian (Farsi) localization
 - **Cross-platform**: Runs on mobile, web, and desktop
 
-## Current Stage: B - Firestore Signaling
+## Current Stage: C - WebRTC Implementation
 
 ✅ **Completed:**
 - Firebase integration with Firestore
 - Signaling service for WebRTC room management
+- **WebRTC P2P connections with real peer-to-peer communication**
+- **Real-time chat messaging via data channels**
+- **Complete end-to-end encrypted communication**
 - Room creation and joining UI
-- Mock offer/answer exchange testing
+- Connection status monitoring
 
 🔄 **Next Stage:**
-- WebRTC peer connection implementation
-- Real-time video/audio streaming
+- Video/audio streaming
+- File sharing capabilities
+- Advanced P2P features
 
 ## Getting Started
 
@@ -176,23 +180,31 @@ Currently, the app implements signaling with mock data:
 
 - `firebase_core`: Firebase initialization
 - `cloud_firestore`: Firestore database for signaling
+- `flutter_webrtc`: WebRTC implementation for peer-to-peer connections
 - `easy_localization`: Internationalization support
 
 ## Development Notes
 
-This is **Stage B** of the GlobGram P2P project. The current implementation provides:
+This is **Stage C** of the GlobGram P2P project. The current implementation provides:
 - ✅ Complete signaling service using Firestore
+- ✅ Real WebRTC peer-to-peer connections
+- ✅ Direct data channel communication (no server involved)
+- ✅ Real-time chat messaging between peers
+- ✅ Connection state monitoring and error handling
 - ✅ Room creation and joining functionality
-- ✅ ICE candidate exchange infrastructure
-- ✅ Error handling and user feedback
 - ✅ Responsive UI with material design
 
+**Key Features:**
+- **True P2P Communication**: Once connected, no data passes through any server
+- **End-to-End Encryption**: WebRTC provides built-in encryption
+- **Real-Time Messaging**: Instant message delivery via data channels
+- **Connection Resilience**: Automatic ICE candidate exchange and connection recovery
+
 **Next stages will implement:**
-- WebRTC peer connection establishment
-- Real-time video/audio streaming
-- Chat messaging
-- File sharing
-- Advanced P2P features
+- Video/audio streaming capabilities
+- File sharing and transfer
+- Group chat functionality
+- Advanced P2P networking features
 
 ## Troubleshooting
 
