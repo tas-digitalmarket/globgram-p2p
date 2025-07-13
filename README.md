@@ -46,8 +46,12 @@ To test the WebRTC P2P chat functionality:
 
 ### Prerequisites
 
-- Flutter SDK (stable channel)
+- Flutter SDK 3.8.1+ (stable channel)
 - Firebase project with Firestore enabled
+- Compatible package versions:
+  - firebase_core: ^3.8.0
+  - cloud_firestore: ^5.4.4
+  - flutter_webrtc: ^0.11.7
 - Firebase CLI (recommended)
 
 ### Installation

@@ -53,38 +53,6 @@ class ChatMessage {
   }
 }
 
-/// Enum for peer connection states
-enum PeerConnectionState {
-  new_,
-  connecting,
-  connected,
-  disconnected,
-  failed,
-  closed,
-}
-
-/// Extension to convert WebRTC states to our enum
-extension RTCPeerConnectionStateExtension on String {
-  PeerConnectionState toPeerConnectionState() {
-    switch (toLowerCase()) {
-      case 'new':
-        return PeerConnectionState.new_;
-      case 'connecting':
-        return PeerConnectionState.connecting;
-      case 'connected':
-        return PeerConnectionState.connected;
-      case 'disconnected':
-        return PeerConnectionState.disconnected;
-      case 'failed':
-        return PeerConnectionState.failed;
-      case 'closed':
-        return PeerConnectionState.closed;
-      default:
-        return PeerConnectionState.new_;
-    }
-  }
-}
-
 /// Data channel states
 enum DataChannelState {
   connecting,

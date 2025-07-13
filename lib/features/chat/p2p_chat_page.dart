@@ -136,7 +136,7 @@ class _P2PChatPageState extends State<P2PChatPage> {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      color: statusColor.withOpacity(0.1),
+      color: statusColor.withValues(alpha: 0.1),
       child: Row(
         children: [
           Icon(Icons.circle, color: statusColor, size: 12),
@@ -182,7 +182,7 @@ class _P2PChatPageState extends State<P2PChatPage> {
               '${message.timestamp.hour.toString().padLeft(2, '0')}:${message.timestamp.minute.toString().padLeft(2, '0')}',
               style: TextStyle(
                 color: message.isFromMe 
-                    ? Colors.white.withOpacity(0.7)
+                    ? Colors.white.withValues(alpha: 0.7)
                     : Colors.black54,
                 fontSize: 12,
               ),
