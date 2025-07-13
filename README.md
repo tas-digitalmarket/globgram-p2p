@@ -1,57 +1,334 @@
 # GlobGram P2P
 
-A decentralized social media application built with Flutter.
+A decentralized social media application built with Flutter and WebRTC for true peer-to-peer communication.
 
-## Features
+![GlobGram P2P](screenshots/app_preview.png)
 
-- **Decentralized Architecture**: No central server required
-- **Firestore Signaling**: Serverless WebRTC signaling via Firebase
-- **Multi-language Support**: English and Persian (Farsi) localization
-- **Cross-platform**: Runs on mobile, web, and desktop
+## 🌟 Features
 
-## Current Stage: C - WebRTC Implementation
+- **🔒 Decentralized Architecture**: No central server required for communication
+- **🔥 Firebase Signaling**: Serverless WebRTC signaling via Firestore
+- **🎙️ Voice Messages**: Record and send voice clips with hold-to-record
+- **💬 Real-time Chat**: Instant messaging with direct peer connections
+- **🌍 Multi-language Support**: English and Persian (Farsi) localization
+- **📱 Cross-platform**: Runs on mobile, web, and desktop
+- **🎨 Modern UI**: Material Design 3 with dark mode support
 
-✅ **Completed:**
+## 🚀 Stage Progress
+
+### ✅ Stage A - Flutter Skeleton + Firebase
 - Firebase integration with Firestore
-- Signaling service for WebRTC room management
-- **WebRTC P2P connections with real peer-to-peer communication**
-- **Real-time chat messaging via data channels**
-- Room creation and joining UI
-- Connection status monitoring
+- Multi-language localization setup
+- Basic UI structure
 
-### Stage C – WebRTC Test
+### ✅ Stage B - Firestore Signaling  
+- WebRTC signaling service via Firestore
+- Room creation and management
+- ICE candidate exchange
 
-To test the WebRTC P2P chat functionality:
+### ✅ Stage C - WebRTC Implementation
+- Peer-to-peer connections with data channels
+- Real-time chat messaging
+- Connection state monitoring
 
-1. **Open two browser tabs** (Chrome recommended):
-   - Tab 1: `flutter run -d chrome`
-   - Tab 2: Open another instance at `localhost:port`
+### ✅ Stage D - Voice & Final Polish
+- **Voice recording with hold-to-record**
+- **Voice message playback**
+- **Enhanced UI with rounded cards and shadows**
+- **Auto-scroll and dark mode friendly design**
 
-2. **Create and join a room**:
-   - Tab 1: Click "Create Room" → "Start P2P Chat"
-   - Copy the Room ID displayed
-   - Tab 2: Paste Room ID → "Join Room"
+## 🛠️ Firebase Setup
 
-3. **Send messages**:
-   - Wait for "Connected ✅" status in both tabs
-   - Type messages and press Send
-   - Messages appear instantly in both tabs via direct P2P connection
+### 1. Create Firebase Project
 
-**Note**: Once connected, all communication is direct between browsers - no server involved!
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Click "Create a project"
+3. Enter project name: `globgram-p2p`
+4. Enable Google Analytics (optional)
+5. Click "Create project"
 
-🔄 **Next Stage:**
-- Video/audio streaming capabilities
+![Firebase Project Creation](screenshots/firebase_create_project.png)
 
-## Getting Started
+### 2. Enable Firestore Database
+
+1. In Firebase Console, go to "Firestore Database"
+2. Click "Create database"
+3. Choose "Start in test mode"
+4. Select location closest to your users
+5. Click "Done"
+
+![Firestore Setup](screenshots/firestore_setup.png)
+
+### 3. Configure Web App
+
+1. Click the web icon (`</>`) in project overview
+2. Register app with name: `globgram-p2p-web`
+3. Copy the configuration object
+4. Replace the placeholder in `lib/firebase_options.dart`:
+
+```dart
+static const FirebaseOptions web = FirebaseOptions(
+  apiKey: 'your-api-key',
+  authDomain: 'your-project.firebaseapp.com',
+  projectId: 'your-project-id',
+  storageBucket: 'your-project.appspot.com',
+  messagingSenderId: '123456789',
+  appId: 'your-app-id',
+);
+```
+
+### 4. Configure Security Rules
+
+Go to Firestore Database > Rules and update:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /rooms/{roomId} {
+      allow read, write: if true;
+      match /candidates/{candidateType} {
+        allow read, write: if true;
+        match /list/{candidateId} {
+          allow read, write: if true;
+        }
+      }
+    }
+  }
+}
+```
+
+![Firestore Rules](screenshots/firestore_rules.png)
+
+## 📱 How to Use
+
+### Creating a Room
+
+1. Open the app
+2. Click **"Create Room"**
+3. Wait for room creation
+4. Click **"Start P2P Chat"**
+5. Share the displayed Room ID
+
+![Create Room](screenshots/create_room.png)
+
+### Joining a Room
+
+1. Open the app in another browser/device
+2. Enter the Room ID
+3. Click **"Join Room"**
+4. Wait for connection
+
+![Join Room](screenshots/join_room.png)
+
+### Voice Messages
+
+1. **Hold** the microphone button to record
+2. **Release** to send the voice message
+3. **Tap** voice messages to play them
+
+![Voice Messages](screenshots/voice_messages.png)
+
+## 🔧 Development Setup
 
 ### Prerequisites
 
 - Flutter SDK 3.8.1+ (stable channel)
+- Dart SDK 3.8.1+
 - Firebase project with Firestore enabled
-- Compatible package versions:
-  - firebase_core: ^3.8.0
-  - cloud_firestore: ^5.4.4
-  - flutter_webrtc: ^0.11.7
+
+### Dependencies
+
+```yaml
+dependencies:
+  firebase_core: ^3.8.0
+  cloud_firestore: ^5.4.4
+  flutter_webrtc: ^0.11.7
+  flutter_sound: ^9.2.13
+  permission_handler: ^11.3.1
+  easy_localization: ^3.0.7
+```
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/tas-digitalmarket/globgram-p2p.git
+   cd globgram-p2p
+   ```
+
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Configure Firebase**
+   - Follow the Firebase setup steps above
+   - Update `lib/firebase_options.dart`
+
+4. **Run the application**
+   ```bash
+   # Web
+   flutter run -d chrome
+   
+   # Android
+   flutter run -d android
+   
+   # iOS
+   flutter run -d ios
+   ```
+
+## 🏗️ Build Commands
+
+### Web Build
+```bash
+flutter build web --release
+```
+
+### Android APK
+```bash
+flutter build apk --release
+```
+
+### Android App Bundle
+```bash
+flutter build appbundle --release
+```
+
+### iOS
+```bash
+flutter build ios --release
+```
+
+## 🌐 Deployment
+
+### GitHub Pages Deployment
+
+1. **Build for web**
+   ```bash
+   flutter build web --base-href /globgram-p2p/
+   ```
+
+2. **Deploy to GitHub Pages**
+   ```bash
+   # Add build output to git
+   git add build/web
+   git commit -m "Deploy web build"
+   git subtree push --prefix build/web origin gh-pages
+   ```
+
+3. **Configure Firebase**
+   - Go to Firebase Console > Authentication > Settings
+   - Add your GitHub Pages domain to authorized domains:
+   ```
+   https://yourusername.github.io
+   ```
+
+### Custom Domain Setup
+
+1. **Add domain to Firebase**
+   - Firebase Console > Hosting > Add custom domain
+   - Follow DNS configuration steps
+
+2. **Update CORS settings**
+   - Ensure WebRTC works over HTTPS
+   - Configure proper SSL certificates
+
+## 🎮 Testing P2P Connection
+
+### Local Testing
+1. **Open two browser tabs**
+   ```bash
+   flutter run -d chrome
+   ```
+   - Tab 1: Create room → Start P2P Chat
+   - Tab 2: Join room with Room ID
+
+2. **Test features**
+   - Send text messages
+   - Record and send voice messages
+   - Verify real-time communication
+
+### Network Testing
+1. **Different devices on same network**
+   - Build and install on mobile devices
+   - Use web version on computers
+   - Test cross-platform communication
+
+2. **Internet testing**
+   - Deploy to GitHub Pages
+   - Test with users in different locations
+   - Verify STUN server connectivity
+
+## 🔧 Technical Architecture
+
+### WebRTC Flow
+```
+Caller                    Firestore                    Callee
+  |                          |                          |
+  |-- Create Room ---------->|                          |
+  |<-- Room ID --------------|                          |
+  |                          |<-- Join Room ------------|
+  |<-- Answer ---------------|                          |
+  |-- ICE Candidates ------->|-- ICE Candidates ------->|
+  |<-- ICE Candidates -------|<-- ICE Candidates -------|
+  |                          |                          |
+  |<======= Direct P2P Connection ======>|
+```
+
+### Data Channel Messages
+```json
+{
+  "id": "timestamp_random",
+  "text": "Hello world",
+  "timestamp": 1640995200000,
+  "type": "MessageType.text",
+  "voiceData": null
+}
+```
+
+### Voice Message Format
+```json
+{
+  "id": "timestamp_random", 
+  "text": "[Voice Message]",
+  "timestamp": 1640995200000,
+  "type": "MessageType.voice",
+  "voiceData": "base64EncodedAudioData"
+}
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Flutter team for the amazing framework
+- Firebase for serverless infrastructure
+- WebRTC for peer-to-peer communication
+- Flutter Sound for audio recording capabilities
+
+## 📞 Support
+
+For support and questions:
+- 📧 Email: support@globgram.dev
+- 💬 GitHub Issues: [Create an issue](https://github.com/tas-digitalmarket/globgram-p2p/issues)
+- 🌐 Website: [globgram.dev](https://globgram.dev)
+
+---
+
+**🌟 Star this repository if you found it helpful!** 
+
+Built with ❤️ using Flutter & WebRTC
 - Firebase CLI (recommended)
 
 ### Installation

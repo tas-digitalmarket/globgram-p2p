@@ -1,26 +1,35 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../signaling/firestore_signaling_service.dart';
+
+enum MessageType { text, voice }
 
 class Message {
   final String id;
   final String text;
   final DateTime timestamp;
   final bool isFromMe;
+  final MessageType type;
+  final Uint8List? voiceData;
 
   Message({
     required this.id,
     required this.text,
     required this.timestamp,
     required this.isFromMe,
+    this.type = MessageType.text,
+    this.voiceData,
   });
 
   Map<String, dynamic> toJson() => {
     'id': id,
     'text': text,
     'timestamp': timestamp.millisecondsSinceEpoch,
+    'type': type.toString(),
+    'voiceData': voiceData != null ? base64Encode(voiceData!) : null,
   };
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
@@ -28,6 +37,13 @@ class Message {
     text: json['text'],
     timestamp: DateTime.fromMillisecondsSinceEpoch(json['timestamp']),
     isFromMe: false,
+    type: MessageType.values.firstWhere(
+      (e) => e.toString() == json['type'],
+      orElse: () => MessageType.text,
+    ),
+    voiceData: json['voiceData'] != null 
+        ? base64Decode(json['voiceData']) 
+        : null,
   );
 }
 
@@ -210,6 +226,22 @@ class P2PManager {
       text: text,
       timestamp: DateTime.now(),
       isFromMe: true,
+    );
+
+    await _dataChannel!.send(RTCDataChannelMessage(jsonEncode(message.toJson())));
+    _messageController.add(message);
+  }
+
+  Future<void> sendVoiceMessage(Uint8List voiceData) async {
+    if (_dataChannel?.state != RTCDataChannelState.RTCDataChannelOpen) return;
+
+    final message = Message(
+      id: '${DateTime.now().millisecondsSinceEpoch}_${Random().nextInt(999999)}',
+      text: '[Voice Message]',
+      timestamp: DateTime.now(),
+      isFromMe: true,
+      type: MessageType.voice,
+      voiceData: voiceData,
     );
 
     await _dataChannel!.send(RTCDataChannelMessage(jsonEncode(message.toJson())));
