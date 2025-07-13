@@ -5,16 +5,29 @@ A decentralized social media application built with Flutter.
 ## Features
 
 - **Decentralized Architecture**: No central server required
-- **Firebase Integration**: Ready for cloud services
+- **Firestore Signaling**: Serverless WebRTC signaling via Firebase
 - **Multi-language Support**: English and Persian (Farsi) localization
 - **Cross-platform**: Runs on mobile, web, and desktop
+
+## Current Stage: B - Firestore Signaling
+
+✅ **Completed:**
+- Firebase integration with Firestore
+- Signaling service for WebRTC room management
+- Room creation and joining UI
+- Mock offer/answer exchange testing
+
+🔄 **Next Stage:**
+- WebRTC peer connection implementation
+- Real-time video/audio streaming
 
 ## Getting Started
 
 ### Prerequisites
 
 - Flutter SDK (stable channel)
-- Firebase CLI (optional, for Firebase configuration)
+- Firebase project with Firestore enabled
+- Firebase CLI (recommended)
 
 ### Installation
 
@@ -29,13 +42,60 @@ cd globgram_p2p
 flutter pub get
 ```
 
-3. Configure Firebase (optional):
-   - Update `lib/firebase_options.dart` with your Firebase project settings
-   - Or use FlutterFire CLI: `flutterfire configure`
+3. **Configure Firebase**:
+   
+   **Option A: Using FlutterFire CLI (Recommended)**
+   ```bash
+   # Install FlutterFire CLI
+   dart pub global activate flutterfire_cli
+   
+   # Configure your project
+   flutterfire configure
+   ```
+   
+   **Option B: Manual Configuration**
+   - Create a Firebase project at https://console.firebase.google.com
+   - Enable Firestore Database
+   - Add your app to the Firebase project
+   - Update `lib/firebase_options.dart` with your project settings:
+   
+   ```dart
+   // Replace placeholder values with your actual Firebase config
+   static const FirebaseOptions web = FirebaseOptions(
+     apiKey: 'your-actual-api-key',
+     appId: 'your-actual-app-id',
+     messagingSenderId: 'your-messaging-sender-id',
+     projectId: 'your-actual-project-id',
+     authDomain: 'your-project-id.firebaseapp.com',
+     storageBucket: 'your-project-id.appspot.com',
+   );
+   ```
+
+4. **Firestore Security Rules**:
+   
+   Set up basic security rules in Firebase Console:
+   ```javascript
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       // Allow read/write access to rooms
+       match /rooms/{roomId} {
+         allow read, write: if true; // For testing only
+         
+         // Allow access to candidates subcollection
+         match /candidates/{candidateType}/list/{candidateId} {
+           allow read, write: if true; // For testing only
+         }
+       }
+     }
+   }
+   ```
+   
+   ⚠️ **Note**: These rules are for testing only. Implement proper authentication and authorization for production.
 
 ### Running the App
 
-#### Web (Chrome)
+#### Web (Chrome) - Recommended for testing
 ```bash
 flutter run -d chrome
 ```
@@ -56,36 +116,98 @@ flutter run -d linux     # For Linux
 
 ```
 lib/
-├── main.dart              # App entry point with Firebase & localization setup
-├── firebase_options.dart  # Firebase configuration
+├── main.dart                           # App entry point
+├── firebase_options.dart               # Firebase configuration
+├── core/
+│   └── signaling/
+│       └── firestore_signaling_service.dart  # Firestore signaling implementation
+└── pages/
+    └── room_selection_page.dart        # Room creation/joining UI
 assets/
 ├── translations/
-    ├── en-US.json         # English translations
-    └── fa-IR.json         # Persian translations
+    ├── en-US.json                      # English translations
+    └── fa-IR.json                      # Persian translations
 ```
 
-## Configuration
+## Firestore Schema
 
-### Firebase Setup
-Replace placeholder values in `lib/firebase_options.dart` with your actual Firebase project configuration.
+The app uses the following Firestore structure:
 
-### Localization
-Add new languages by:
-1. Creating translation files in `assets/translations/`
-2. Adding locale to `supportedLocales` in `main.dart`
+```
+rooms/{roomId}
+├── offer: Map<String, dynamic>         # WebRTC offer
+├── answer: Map<String, dynamic>        # WebRTC answer
+├── createdAt: Timestamp
+└── candidates/                         # ICE candidates collection
+    ├── caller/
+    │   └── list/{autoId}
+    │       ├── candidate: String
+    │       ├── sdpMid: String
+    │       ├── sdpMLineIndex: int
+    │       └── timestamp: Timestamp
+    └── callee/
+        └── list/{autoId}
+            ├── candidate: String
+            ├── sdpMid: String
+            ├── sdpMLineIndex: int
+            └── timestamp: Timestamp
+```
+
+## Usage
+
+1. **Create a Room**:
+   - Click "Create Room" button
+   - Copy the generated Room ID
+   - Share it with the person you want to connect with
+
+2. **Join a Room**:
+   - Paste the Room ID in the text field
+   - Click "Join Room" button
+   - The app will connect to the existing room
+
+## Testing
+
+Currently, the app implements signaling with mock data:
+- Mock SDP offers and answers
+- Firestore-based room management
+- ICE candidate exchange structure
 
 ## Dependencies
 
 - `firebase_core`: Firebase initialization
-- `cloud_firestore`: Firestore database
+- `cloud_firestore`: Firestore database for signaling
 - `easy_localization`: Internationalization support
 
 ## Development Notes
 
-This is Stage A of the GlobGram P2P project. The current implementation provides:
-- Complete Flutter skeleton
-- Firebase integration setup
-- Localization framework
-- Basic UI structure
+This is **Stage B** of the GlobGram P2P project. The current implementation provides:
+- ✅ Complete signaling service using Firestore
+- ✅ Room creation and joining functionality
+- ✅ ICE candidate exchange infrastructure
+- ✅ Error handling and user feedback
+- ✅ Responsive UI with material design
 
-Future stages will implement P2P networking, decentralized messaging, and social media features.
+**Next stages will implement:**
+- WebRTC peer connection establishment
+- Real-time video/audio streaming
+- Chat messaging
+- File sharing
+- Advanced P2P features
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Firebase not configured**: Make sure you've run `flutterfire configure` or manually updated `firebase_options.dart`
+
+2. **Firestore permission denied**: Check your Firestore security rules
+
+3. **Room not found**: Ensure the Room ID is copied correctly (case-sensitive)
+
+4. **Connection issues**: Verify your internet connection and Firebase project status
+
+### Debug Tips
+
+- Check browser console for detailed error messages when running on web
+- Use Firebase Console to monitor Firestore operations
+- Enable Flutter debug logging for detailed information
