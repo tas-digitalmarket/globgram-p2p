@@ -16,14 +16,31 @@ A decentralized social media application built with Flutter.
 - Signaling service for WebRTC room management
 - **WebRTC P2P connections with real peer-to-peer communication**
 - **Real-time chat messaging via data channels**
-- **Complete end-to-end encrypted communication**
 - Room creation and joining UI
 - Connection status monitoring
 
+### Stage C – WebRTC Test
+
+To test the WebRTC P2P chat functionality:
+
+1. **Open two browser tabs** (Chrome recommended):
+   - Tab 1: `flutter run -d chrome`
+   - Tab 2: Open another instance at `localhost:port`
+
+2. **Create and join a room**:
+   - Tab 1: Click "Create Room" → "Start P2P Chat"
+   - Copy the Room ID displayed
+   - Tab 2: Paste Room ID → "Join Room"
+
+3. **Send messages**:
+   - Wait for "Connected ✅" status in both tabs
+   - Type messages and press Send
+   - Messages appear instantly in both tabs via direct P2P connection
+
+**Note**: Once connected, all communication is direct between browsers - no server involved!
+
 🔄 **Next Stage:**
-- Video/audio streaming
-- File sharing capabilities
-- Advanced P2P features
+- Video/audio streaming capabilities
 
 ## Getting Started
 

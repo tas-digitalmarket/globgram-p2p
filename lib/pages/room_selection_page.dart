@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../core/signaling/firestore_signaling_service.dart';
 import 'signaling_test_page.dart';
-import 'p2p_chat_page.dart';
+import '../features/chat/p2p_chat_page.dart';
 
 class RoomSelectionPage extends StatefulWidget {
   const RoomSelectionPage({super.key});
