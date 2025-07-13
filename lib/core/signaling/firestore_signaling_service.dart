@@ -107,7 +107,7 @@ class FirestoreSignalingService {
     String roomId,
     bool isForCaller,
   ) {
-    final candidateType = isForCaller ? _callerCandidates : _calleeCandidates;
+    final candidateType = isForCaller ? _calleeCandidates : _callerCandidates;
     
     return _firestore
         .collection(_roomsCollection)
