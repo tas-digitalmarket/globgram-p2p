@@ -135,6 +135,8 @@ class P2PManager {
       'type': answer.type,
       'sdp': answer.sdp,
     });
+    
+    _isCaller = false;
   }
 
   Future<void> _handleRemoteAnswer(Map<String, dynamic> answerData) async {
